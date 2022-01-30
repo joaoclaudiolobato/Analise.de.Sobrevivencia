@@ -1,0 +1,215 @@
+---
+title: oiiii
+output: html_document
+---
+
+##  <span style= "color:blue">IEE065 - An?lise de Sobreviv?ncia e Confiabilidade
+#### Aluno: Jo?o Claudio da Silva Araujo Lobato
+##### Amazoneida S? Peixoto Pinheiro - Professora Associada do Depto. Estat?stica - UFAM
+### Aula 04: T?pico II: Fun??es B?sicas de Sobreviv?ncia
+#### Data: 20/01/2022
+
+* Nesta aula iremos definir e interpretar as fun??es de sobreviv?ncia: Fun??o de sobreviv?ncia, Fun??o de Falha, Fun??o de Risco ou Taxa de falha e Risco Acumulado.
+
+ ### <span style= "color:red"> 1. Fun??o de Densidade de Probabilidade
+
+* Definimos a vari?vel $T$ - o tempo de sobreviv?ncia, o tempo at? a ocorr?ncia de um evento de interesse. 
+* Considere T uma v.a cont?nua ou discreta, n?o negativa, $T \geq 0$, com fun??o de densidade $f(t)$.
+* No contexto da ASC, a fun??o $f(t)$ pode ser interpretada como a probabilidade de um indiv?duo sofrer um evento em um intervalo instant?neo de tempo, onde $\epsilon$ ? o incremento de tempo infinitamente pequeno
+
+## $f(t) = lim_{\epsilon-> 0}\frac{P(t \leq T \leq t+ \epsilon)}{\epsilon}$
+
+* se n?o houver censura, se todos os pacientes apresentarem o evento antes do fim do estudo, a fun??o pode ser a partir dos tempos em que ocorreram os eventos.
+
+* EXEMPLO: Suponha que 32 pacientes diagnosticados com AIDS foram acompanhados ao longo do tempo e todos faleceram antes do fim do estudo
+
+```{r}
+# Tempo de sobreviv?ncia (em dias)
+Dias<-c(3,18, 29, 54, 60, 84, 110, 112, 116, 123, 134, 145, 151, 151, 158, 173, 194, 214, 329, 331, 371, 408, 490, 514, 541, 555, 688, 780, 801, 858, 887, 998)
+```
+
+```{r}
+Dias
+```
+
+```{r}
+hist(Dias)
+```
+
+* Os Tempos de vida muitas vezes s?o descritos por densidades assim?tricas, como sugereo o Histograma 
+
+* O valor obs para T - o momento de um ou mais eventos - est? relacionado ? amplitude do intervalo x entre o evento anterior e o atual,calculando -se a estima??o emp?rica:
+
+### $\hat{f}_x(t)=\frac{N_x(t)}{(No \ Total \ de \ ocorr?ncias)*\Delta_x}$
+
+Onde:
+    x: ? o ?ndice do intervalo: 1,2,3,... e
+    
+  $N_x(t) $: ? o No. de ocorr?ncias no intervalo de tempo $x \ e \Delta_x$
+  
+**OBS: A prob de ocorr?ncia do evento permanece constante dentro do intervalo de tempo entre o evento anterior e atual**
+
+| Intervalo 	| Rx(t) 	| Nx(t) 	| Ampl.Int 	    |$\hat{f_x}(t)$|
+|--------------	|----------	|----------	|--------------	|---------	|
+| (0,3]     	| 32    	| 1     	| 3         	| 0.01042 	| 
+| (3,18]    	| 31    	| 1     	| 15        	| 0.00208 	| 
+| (18,29]   	| 30    	| 1     	| 11        	| 0.00284 	| 
+| (29,54]   	| 29    	| 1     	| 25        	| 0.00125 	| 
+
+Exerc?cio: Preencha a tabela
+
+```{r}
+Nx<-c(1,1,1,1,1,1,1,1,1,1,1,1,2,1,1)
+```
+
+```{r}
+Ampl<-c(3,15,11,25,6,24,2,4,7,11,6,7,15)
+```
+
+```{r}
+Rx<-c(32,31,30,29,28,27,26,25,24,23,22,21,20,18,17)
+```
+
+```{r}
+ft=c()
+N<-32
+for (i in 1:15){
+   ft[i]<- Nx[i]/(32*Ampl[i])  
+}
+
+ft
+```
+
+### <span style= "color:red"> 2. Fun??o de Sobreviv?ncia
+
+* Poderemos responder:
+
+Qual a prob de um ind. com AIDS sobreviver por mais de 365 dias? Isto ? qual a prob. de T ser maior que um determinado valor $t=365$? Formalmente:
+
+ ### $S(t) = P(T > t)=1-F(t)$
+ 
+ ### $F(t)=\bar{S(t)} = 1 - S(t) = P(T \leq t)$
+ 
+ $F(t)$ ? a Fun??o de Distribui??o acumulada da v.a T, logo $S(t)$ ? o complemento de $F(t)$, ? definida como a Prob. do ind. n?o sobreviver ao tempo t.
+ 
+### Caracter?stica de S(t):
+   * $S(0)=1$
+   * ? uma fun??o n?o crescente;
+   * $ t -> \infty; S(\infty)=0$
+     
+###  $\hat{S(t)}=\frac{R_x(t)}{No. \ Total \ de \ indiv?duos}$
+
+Onde $R_x(t):$ No. de indiv?duos sob risco no in?cio do intervalo
+
+Exemplo: 
+
+### $\hat{S}_{(18,29]}(t)=\frac{R_{(18,29]}(t)}{32}=\frac{30}{32}=0.93750$
+
+    * Assim, A prob. de ind. sobrever por mais de 18 dias ?:
+    
+$\hat{S}(18) = \hat{P}(T > 18)= 0.93750$
+    
+
+```{r}
+st<-0
+for (i in 1:15){
+    st[i]<-Rx[i]/32
+}
+st
+```
+
+```{r}
+length(Dias)
+```
+
+```{r}
+status<-c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
+```
+
+```{r}
+length(status)
+```
+
+```{r}
+require(survival)
+Surv(Dias,status)
+```
+
+```{r}
+# Estima??o da fun??o de Sobreviv?ncia, usando a fun??o survfit do R pacote Survival
+St<- survfit(Surv(Dias,status) ~ 1)
+```
+
+```{r}
+summary(St)
+```
+
+```{r}
+
+plot(St,col="green", lwd=2, main="Estima??o da S(t) de pacientes com AIDS", xlab="Dias",conf.int=F)
+```
+
+| Intervalo 	| Rx(t) 	| Nx(t) 	| Ampl.Int 	    |$\hat{f_x}(t)|$|$\hat{S_x}(t)$|
+|--------------	|----------	|----------	|--------------	|---------	|------------------|
+| (0,3]     	| 32    	| 1     	| 3         	| 0.01042 	| 1.00             |
+| (3,18]    	| 31    	| 1     	| 15        	| 0.00208 	| 0.96875          |
+| (18,29]   	| 30    	| 1     	| 11        	| 0.00284 	| 0.93750          |
+| (29,54]   	| 29    	| 1     	| 25        	| 0.00125 	| 0.90625          |
+
+
+### <span style= "color:red"> 3. Fun??o de Risco(hazard)  ou Taxa de Falha
+
+* Poderemos responder:
+
+* Qual ? o risco de um ind. vir a ?bito ap?s sobreviver 365 dias? Este risco aumento ou   diminui com o tempo?
+
+* <U+03BB>(t) <U+2192> probabilidade instant?nea de um indiv?duo sofrer o evento em um intervalo de tempo t e (t + e) dado que ele sobreviveu at?o tempo t.
+
+* Sendo e infinitamente pequeno, <U+03BB>(t) expressa o risco instant?neo de ocorr?ncia de um evento, dado que at? ent?o o evento n?o tenha ocorrido.
+
+* Vamos agora redefinir o intervalo como $(t, t + <U+2206>t=\epsilon]$:
+ 
+    * Taxa de falha instant?nea em t condicional ? sobreviv?ncia at? o tempo t. Vamos     fazer <U+2206>t =$\epsilon$<U+2192> 0.
+
+    * A fun??ao de taxa de falha de T ? ent?o definida por:
+
+### $\lambda(t) = lim_{\epsilon ->\infty} \frac{P[(t\leq T < t+  \epsilon)| T\geq t]}{\epsilon}$
+
+**Obs: Esta fun??o n?o ? uma probabilidade, apesar de usar o nome Risco**, ? uma taxa e pode assumir qualquer valor positivo.
+
+### $\lambda(t) = \frac{f(t)}{S(t)}= -\frac{d  ln(S(t))}{dt}=\frac{f(t)}{1-F(t)}$
+
+* Sobreviv?ncia e risco s?o inversamente proporcionais: quando o risco aumenta, a probabilidade de sobreviv?ncia diminui e vice-versa.
+
+### $\hat{\lambda}(t) = \frac{N_x(t)}{R_x(t)*\Delta_x}$
+
+    * A fun??o de taxa de falha <U+03BB>(t) ? bastante ?til para descrever a distribui??o de tempos de vida em pacientes - descreve a forma em que a taxa instant?nea de falha muda com o tempo.
+    
+    * A curva da taxa de falha pode ter comportamento gr?fico diverso, podem ser crescente, decrescente, constante, mon?tonas e n?o mon?tonas. Entraremos em mais detalhes, no assunto dos Modelos probabil?sticos de Sobreviv?ncia.
+    
+   * Abaixo a curva da banheira que pode descrever a taxa de falha sistema de vida do Homo sapiens.
+
+![curva-da-banheira-entenda-o-comportamento-da-maquina.png](curva-da-banheira-entenda-o-comportamento-da-maquina.png)
+
+### <span style= "color:red"> 4. Fun??o de Risco Acumulada  ou Taxa de Falha Acumulada
+
+* Qual o risco de um indiv?duo vir a ?bito em seus primeiros 20 anos de vida?
+
+* Qual o risco de um paciente com AIDS vir a ?bito no primeiro ano ap?s odiagn?stico?
+ 
+* $H(t)$ - fun??o de risco acumulado mede o risco de morte at? o tempo t
+
+### $H(t)= - ln(S(t))= \int_0 ^t \lambda(u)du$
+
+| Intervalo 	| Rx(t) 	| Nx(t) 	| Ampl.Int 	    |$\hat{f_x}(t)|$|$\hat{S_x}(t)$| $\lambda(t)$|
+|--------------	|----------	|----------	|--------------	|---------	|------------------|-------------|
+| (0,3]     	| 32    	| 1     	| 3         	| 0.01042 	| 1.00             |
+| (3,18]    	| 31    	| 1     	| 15        	| 0.00208 	| 0.96875          |
+| (18,29]   	| 30    	| 1     	| 11        	| 0.00284 	| 0.93750          |
+| (29,54]   	| 29    	| 1     	| 25        	| 0.00125 	| 0.90625          |
+
+
+
+
+Exerc?cio-II: Encontrar estimativas f(t), S(t), Taxa de falha e taxa de falha acumulada. Fazer o Gr?fico para cada fun??o
+
