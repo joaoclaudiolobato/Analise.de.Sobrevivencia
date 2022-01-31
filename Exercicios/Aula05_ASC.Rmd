@@ -1,0 +1,107 @@
+---
+title: "Aula 05"
+output: rmdformats::downcute_chaos
+---
+
+##  <span style= "color:blue">IEE065 - Análise de Sobrevivência e Confiabilidade
+#### Aluno: João Claudio da Silva Araujo Lobato
+##### Amazoneida Sá Peixoto Pinheiro - Professora Associada do Depto. Estatística - UFAM
+### Aula 05: Tópico II: Funções Básicas de Sobrevivência
+#### Data: 25/01/2022
+
+A aula de hoje ir? revisar as principais funções na ASC e outras quantidades básicas. Para compreender melhor as definições, um exercício que dever? ser entreque na próxima aula juntamente com os exercícios anteriores.
+
+## <span style= "color:red">Outras Quantidades de Interesse na ASC
+
+#### 1. Tempo Médio 
+
+* Como calcular o Tempo médio de vida de um paciente ?
+
+* Considerendo T como uma v.a contínua e não negativa, então o Tempo médio de vida:
+
+  $\mu_T=E[T]=\int_0 ^{\infty} t f(t)dt$
+ 
+ 
+* também pode ser obtido pela area sob a função de sobrevivência: 
+
+  $\mu_T=\int_0 ^{\infty}(1-F(u)du= \int_0 ^{\infty}S(t)dt$
+
+#### 2. Vida Média  Residual - vmr(t)
+
+* Esta medida está condicionada a um tempo de vida t, isto á, para indivíduos com idade t, a vida média residual mede o tempo médio restante de vida ? direita do tempo t dividida por S(t).
+
+
+* E a média do tempo restante de vida para indivíduos com idade $t_0$.
+
+
+  $vmr(t)=\frac{\int_t ^{\infty} (u-t) f(u)du}{S(t)}= \frac{\int_t ^{\infty} S(u)du}{S(t)}$
+
+#### 3. Tempo mediano - $T_{md}$
+
+É o valor de t correspondente à, é o quantil correspondente a:  
+
+### $S(t_{md})=0.5$
+
+## <span style= "color:red">Relações entre as principais funções
+
+### $S(t) = P(T > t)=1-F(t)$
+
+### $S(t) = exp[-H(t)]$
+
+### $H(t) = -ln[S(t)]$
+
+### $\lambda(t) = \frac{f(t)}{S(t)}$
+
+### $\lambda(t) = \frac{f(t)}{1-F(t)}$
+
+### $S(t)=\frac{vmr(0)}{vmr(t)}exp\{ - \int_0 ^t \frac{du}{vmr(u)}\}$
+
+### $\lambda(t)=(\frac{d \  vmr(t)}{dt} + 1)/ vmr(t)$
+
+  
+
+## Exercícios
+
+1. Um grande número de indivíduos foi acompanhado para estudar o aparecimento de um certo sintoma. Os indivíduos foram incluídos ao longo do estudo e foi considerado como resposta de interesse a idade em que este sintoma apareceu pela primeira vez. Para os seis indivíduos selecionados e descritos a seguir, identifique o tipo de censura apresentado.
+
+
+(a) O primeiro indivíduo entrou no estudo com 25 anos j? apresentando o sintoma.
+
+<span style="color: red;">Resposta: Censura à esquerda</span>
+
+(b) Outros dois indivíduos entraram no estudo com 20 e 28 anos e não apresentaram o sintoma até o encerramento do estudo.
+
+<span style="color: red;">Resposta: Censura à direita</span>
+
+(c) Outros dois indivíduos entraram com 35 e 40 anos e apresentaram o sintoma no segundo e no sexto exames respectivamente, após terem entrado no estudo. Os exames foram realizados a cada dois anos.
+
+<span style="color: red;">Resposta: Censura Intervalar</span>
+
+(d) O último indivíduo selecionado entrou no estudo com 36 anos e mudou da cidade depois de 4 anos sem ter apresentado o sintoma.
+
+<span style="color: red;">Resposta: Truncamento</span>
+
+2. Mostre que $H(t) = \int_o ^t λ(u)du = - log S(t)$. 
+
+<span style="color: red;">Resposta:</span>
+
+$$\int_o^tλ(u)du=\int_o^t\frac{f(u)}{S(u)}du=\int_o^t\frac{\partial(1-S(u))}{S(u)}du=\int_o^t\frac{-\partial(S(u))}{S(u)}du$$
+$$λ(t)=\int_o^t\frac{-\partial(S(u))}{S(u)}du=\int_o^t-\frac{\partial logS(u)}{\partial u}du=\frac{\partial}{\partial u}\int_o^t-log S(u)du-logS(u)^t_0=-logS(t)$$
+
+
+3. Suponha que a taxa de falha da variável aleatória tempo de falha T seja expressa pela função linear $λ(t) = β_0 + β_1  t$, com $β_0$ e  $β_1 > 0$. Obtenha $S(t)$  e  $f(t)$.
+
+<span style="color: red;">Resposta:</span>
+
+Se integrarmos λ(u)du e igualando $λ(u) = β_0 + β_1u$:
+
+$$\int_o^tλ(u)du=\int_o^t(β_0 + β_1u)du=β_0u|^t_0+\left[\frac{β_1u^2}{2} \;\right]^t_0=β_0t-\frac{β_1t^2}{2}$$
+
+Assim, $S(t)=exp(-β_0t+\frac{β_1t^2}{2})$, com $t>0$.
+
+Já para $f(t)$, temos:
+
+$$f(t)=λ(t)S(t)=(β_0 + β_1t)exp(-β_0t-\frac{β_1t^2}{2})$$, com $t>0$.
+
+4. Suponha que a vida média residual de T seja dada por $vmr(t) = t + 10$. Obtenha $E(T ), λ(t) \ e \ S(t)$.
+

@@ -1,0 +1,168 @@
+---
+title: "Aula 02"
+output: html_document
+---
+
+##  <span style= "color:blue">IEE065 - Análise de Sobrevivência e Confiabilidade
+#### Aluno: João Claudio da Silva Araujo Lobato
+##### Amazoneida Sá Peixoto Pinheiro - Professora Associada do Depto. Estatística - UFAM
+### Aula-02: Fundamentos da Análise de Sobrevivência e Confiabilidade
+#### Data: 13/01/2022
+
+## <span style= "color:red"> Caracterizando os  Dados de Sobrevivência
+
+### 1. Objeto de interesse: 
+
+**O Tempo**, interpretado como o tempo até a ocorrência de um evento, ou o risco de ocorrência de um evento por unidade de tempo. 
+
+Exemplos: 
+
+O tempo até o óbito, O tempo até a cura, o tempo até a doença, o tempo até a falha do produto, o tempo de prateleira de um produto no supermercado, o tempo de revis?o de um carro. o tempo  de garantia de um produto
+
+**Perguntas pass?veis de respostas nesta abordagem**
+
+Qual o efeito de um anticancer?geno sobre o tempo de sobrevida?
+
+Qual o efeito de um tipo de aglutinante na dura??o de um cimento?
+
+Qual efeito da unidade assistencial na sobrevida ap?s um infarto agudo do mioc?rdio?
+
+### 2. Tipos de investiga??o:
+
+Algumas pesquisas de sobreviv?ncia envolvem acompanhamento de indiv?duos por um longo tempo.
+
+**2.1. Levantamentos Observacionais - Coortes Observacionais:** O pesquisador apenas obs e registra, com ojetivo de de identificar fatores de risco. H? Coortes abertas e fechadas.
+        Exemplo: Suponha um estudo sobre fatores de risco associados ao tempo de sobreviv?ncia ap?s uma crise hipertensiva grave
+
+    Coorte fechada: Partiria de todos os indiv?duos que apresentaram um epis?dio de hipertens?o em um per?odo determinado e os acompaharia por um tempo relevante.
+    Coorte aberta: Os indiv?duos podem entrar ap?s o estudo iniciar-se.
+
+**2.2. Experimenta??o, Coortes interven??o - Ensaios Cl?nicos**: O pesquisador intenv?m na aloca??o  aleat?ria dos tratamentos, com objetivo de verificar a efici?ncia dos mesmos.A aloca??o aleat?ria se d? no in?cio do estudo.
+
+### 3. Registro e Representa??o do Tempo de Sobrevida
+
+A Tabela abaixo apresenta o tempo de sobrevida (meses) de 10 pacientes em di?lise. 
+
+| Paciente ? i 	| Tempo ? $T_i$ 	|
+|--------------	|------------	|
+| 1            	| 22         	|
+| 2            	| 6          	|
+| 3            	| 12         	|
+| 4            	| 43         	|
+| 5            	| 23         	|
+| 6            	| 10         	|
+| 7            	| 35         	|
+| 8            	| 18         	|
+| 9            	| 36         	|
+| 10           	| 29         	|
+   
+
+Estes dados podem ser representados graficamente como linhas: No eixo das abscissas est? o tempo de acompanhamento e no eixo das ordenadas est? o identificador do paciente. No momento do ?bito est? assilalado um X.
+Ver figura
+http://sobrevida.fiocruz.br/material/slidesintro.pdf
+
+O evento que marca o t?rmino do tempo de obs., tamb?m ? chamado de **falha ou desfecho**
+No exemplo da Tabela acima, as informa??es  est?o completas, isto ? o in?cio da di?lise e o momento do ?bito s?o conhecidos para todos os indiv?duos.
+
+   
+
+### <span style= "color:red">3.1 Informa??es Incompletas
+
+Este exemploe n?o ? muito realista, dificilmente em uma Coorte os indiv?duos s?o acompanhados at? a ocorr?ncia do evento de interesse e muitas vezes n?o se conhece a data de in?cio a data de in?cio do acompanhamento da coorte. As causas da perda da informa??o temporal s?o v?rias:
+
+        * ?bito por causas n?o relacionadas ao estudo, causas externas.
+        
+        * t?rmino do estudo;
+        
+        * perda de contato - mudan?a de resid?ncia;
+        
+        * recusa em continuar participando do estudo;
+        
+        * mudan?a de procedimento ? esquema de tratamento;
+        
+        * abandono devido a efeitos adversos de tratamento;
+        
+        * desconhecimento da data de in?cio ? em pacientes HIV+ com data de infec??o ?   desconhecida
+        
+   Nestes casos diz-se que houve **Censura ou  Truncamento**
+
+### <span style= "color:purple">3.1.1 Censura
+
+As censuras podem ser por limita??o de tempo ou por n?mero de indiv?duos com desfecho.
+
+| Paciente ? i 	| Tempo ? Ti 	| Status- $\delta_i$ 	|
+|--------------	|------------	|------------	|
+| 1            	| 22         	| 1          	|
+| 2            	| 6          	| 0          	|
+| 3            	| 12         	| 1          	|
+| 4            	| 43         	| 0          	|
+| 5            	| 23         	| 1          	|
+| 6            	| 10         	| 1          	|
+| 7            	| 35         	| 1          	|
+| 8            	| 18         	| 0          	|
+| 9            	| 36         	| 1          	|
+| 10           	| 29         	| 1          	|
+
+### Censura `a direita: 
+
+* ? a mais comum. N?o se observa o desfecho.
+
+* Sabe-se que o tempo entre o in?cio do estudo e o evento ? maior do que o tempo observado.
+
+* Nesse caso aproveita-se a informa??o do tempo durante o qual a pessoa esteve sob observa??o sem que ocorresse o evento.
+
+* Desprezar essa informa??o faria com que o risco fosse superestimado, pois o tempo at?a evento ? desconhecido, mas o paciente estava em risco de sofrer o evento pelo menos at? o ?ltimo momento observado.
+
+* $T > T_{obs}$
+
+$(T_i, \delta_i)$ - Nota??o Cl?ssica para dados com censura ? direita onde:
+
+$T_i$ ? o tempo de observa??o do indiv?duo i e'
+
+$\delta_i$ ? uma vari?vel indicadora do status, que assume 1 se o desfecho ocorreu e 0 se se indiv?duo foi censurado.
+
+Assim Paciente 3:$(T_3,\delta_3)=(12,1)$
+
+   Paciente 8:$(T_8,\delta_8)=(18,0)$
+
+### Outros tipos de Censura
+
+**Censura ? esquerda**:
+
+O momento do desfecho ? desconhecido e ocorreu antes do tempo observado.
+Exemplo: Considere um estudo para investigar fatores associados ? infec??o de Leptospirose em uma comunidade de baixa renda. Os participantes s?o inclu?dos assim que mudam de ?rea. Uma vez a cada 6 meses os pesquisadores fazem o teste sangue para verificar a presen?a do v?rus. Alguns participantes logo na primeira coleta j? estavam contaminados, ou seja a contamina??o pode ter acontecido entre o dia da mudan?a para comunidade e  o alguns dia antes do 1o exame. 
+
+S? podemos afirmar que tempo de soroconvers?o, que define o tempo de sobreviv?ncia ? menor que o tempo do 1o. exame, ou seja: $(T < T_{obs})$
+
+### 3.1.2 Truncamento:**
+
+? um tipos de dado incompleto, no qual o indiv?duo ? retirado do estudo.
+
+
+### 3.2 Tipos de Nota??o
+
+1. Cl?ssica
+
+2. Processo de Contagem
+
+### Processo de Contagem.
+
+Na nota??o Cl?ssica ? apenas registrado o tempo em que o indiv?duo foi observado.
+Na abordagem de contagem, define-se algumas vari?veis:
+
+
+O tempo de sobreviv?ncia passa ser descrito por uma par de vari?veis:
+$(N_i(t), Y_i(t))$ se modificam com o tempo.
+
+$N_i(t)$ - ? o n?mero de eventos sofridos pelo indiv?duo no intervalo [0,t]
+
+$Y_i(t)$ - ? uma bin?ria, indicadora da presen?a da pop. em risco
+
+$Y_i(t) = 1$, se o ind. i ele est? sob obs e em risco de sofrer a doen?a.
+
+$Y_i(t) = 0$, se o ind. n?o est? mais em obs. portanto, n?o est? mais sob risco
+
+### Exerc?cio
+
+Exercício da Tabela de Contagem do slide de http://sobrevida.fiocruz.br/material/slidesintro.pdf
+

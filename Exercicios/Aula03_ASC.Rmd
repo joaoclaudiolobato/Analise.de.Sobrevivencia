@@ -1,0 +1,130 @@
+---
+title: "Aula 3"
+output: rmdformats::downcute_chaos
+---
+
+##  <span style= "color:blue">IEE065 - Análise de Sobrevivência e Confiabilidade
+#### Aluno: João Claudio da Silva Araujo Lobato
+##### Amazoneida Sá Peixoto Pinheiro - Professora Associada do Depto. Estatística - UFAM
+### Aula-03: Fundamentos da Análise de Sobrevivência e Confiabilidade
+#### Data: 18/01/2022
+
+## <span style= "color:red"> Caracterizando os  Dados de Sobrevivência
+
+### Tempo de sobrevivência no R.
+
+O R aceita os dois formatos de registro do tempo de sobrevivência.
+
+     * O comando Surv() tem como função combinar, em uma única variavel, a informação   referente ao tempo de sobrevivência de cada indivíduo e a informação a respeito do status do paciente.
+       Status = 1 (um), se ocorreu o evento Status = 0 (zero) se o tempo foi censurado;
+
+```{r}
+tempo<-c(22,6,12,43,23,10,35,18,36,29)
+status<-c(1,0,1,0,1,1,1,0,1,1)
+```
+
+```{r}
+# Nota??o Cl?ssica no R
+require(survival)
+Surv(tempo,status)
+```
+
+```{r}
+# Processo de Contagem no R
+inicio<-c(0,15,0,25,10,0,0,12,3,15)
+fim<-c(22,21,12,47,33,10,35,30,39,34)
+Surv(inicio,fim,status)
+```
+
+## <span style= "color:red"> Exercícios
+
+http://sobrevida.fiocruz.br
+
+ **Exercício 1.1** O tempo de aleitamento, isto é, o tempo decorrido desde o nascimento até o desmame, pode ser considerado como uma variável tempo de sobrevivência. Suponha que o tempo até o desmame, em meses, tenha sido registrado para 15 crianças e que todas entraram no estudo no mesmo dia:
+
+Tempos de aleitamento: 6 12 10 3 5 1 6 8 1 5 2 2 5 8 1 Considerando que não houve censura:
+
+a. Represente graficamente os tempos de observação das 15 crianças.
+
+<span style="color: red;">Resposta:</span>
+
+```{r message=FALSE, warning=FALSE}
+aleitamentos=c(6,12,10,3,5,1,6,8,1,5,2,2,5,8,1)
+meses=c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15)
+require(tidyverse)
+
+ggplot(NULL, aes(x=meses, y=aleitamentos)) +
+  geom_segment( aes(x=meses, xend=meses, y=0, yend=aleitamentos)) +
+  geom_point( size=5, color="darkblue", fill=alpha("blue", 0.3), alpha=0.7, shape=21, stroke=2)+coord_flip()+theme_minimal()+ylab("Meses")+xlab("Individuos")
+```
+
+b. Represente as trajetórias dos primeiros cinco indivíduos utilizando as variáveis N(t) e Y (t) do processo de contagem.
+
+
+
+c. Como você construiria um banco de dados para analisar estes dados pelo processo clássico e de contagem?
+
+<span style="color: red;">Resposta: Processo Clássico</span>
+
+```{r message=FALSE, warning=FALSE}
+dados=data.frame(Individuo=c(1:15),Tempo=aleitamentos,Status=c(rep(1,15)))
+require(DT)
+datatable(dados,rownames = FALSE,options = list(searching = FALSE,
+  initComplete = JS(
+    "function(settings, json) {",
+    "$(this.api().table().header()).css({'background-color': '#8EA8C3', 'color': '#fff'});",
+    "}")
+))%>% DT::formatStyle("Tempo",  color = 'white', backgroundColor = 'grey', fontWeight = 'bold') %>%DT::formatStyle('Individuo',  color = 'white', backgroundColor = 'grey', fontWeight = 'bold')%>% DT::formatStyle("Status",  color = 'white', backgroundColor = 'grey', fontWeight = 'bold') %>%DT::formatStyle('Individuo',  color = 'white', backgroundColor = 'grey', fontWeight = 'bold')
+
+```
+
+<span style="color: red;">Resposta: Processo de Contagem</span>
+
+```{r message=FALSE, warning=FALSE}
+dados2=data.frame(Individuo=c(1:15),"Tempo Inicio"=c(rep(0,15)),"Tempo Fim"=aleitamentos,Status=c(rep(1,15)))
+require(DT)
+datatable(dados2,rownames = FALSE,options = list(searching = FALSE,
+  initComplete = JS(
+    "function(settings, json) {",
+    "$(this.api().table().header()).css({'background-color': '#8EA8C3', 'color': '#fff'});",
+    "}")
+))%>% DT::formatStyle("Tempo.Inicio",  color = 'white', backgroundColor = 'grey', fontWeight = 'bold') %>%DT::formatStyle('Individuo',  color = 'white', backgroundColor = 'grey', fontWeight = 'bold')%>% DT::formatStyle("Status",  color = 'white', backgroundColor = 'grey', fontWeight = 'bold') %>%DT::formatStyle('Individuo',  color = 'white', backgroundColor = 'grey', fontWeight = 'bold')%>%DT::formatStyle('Tempo.Fim',  color = 'white', backgroundColor = 'grey', fontWeight = 'bold')
+
+```
+
+
+**Exercício 1.2:** Considere agora o tempo de sobrevivência de 15 pacientes submetidos à hemodiálise. Neste caso, a variável de interesse ? o tempo desde a primeira diálise até o óbito (em meses). Repita os itens a,b e c do ex anterior.
+
+
+
+
+**Exercício 1.3:** Considere os dados de 6 indivíduos em uma coorte para a avaliação de fatores de risco para a infecção por HIV. O estudo iniciou-se em 01/06/2008 quando 2 indivíduos entraram no estudo, com resultados negativos para a infecção. Um deles ao realizar o segundo exame, um m?s depois, teve resultado positivo, o outro positivou depois de 2 meses. Os outros 4 indivíduos realizaram seus primeiros exames em 01/07, 01/09, 01/08 e 01/08, e as suas respectivas datas de soroconversões foram 2, 3, 2 e 5 meses, após a entrada.
+
+a. Construa a base de dados no formato clássico e de contagem.
+
+b. Represente graficamente os tempos observados desses indivíduos 
+
+c. Que tipo de censura ocorreu no estudo?
+
+d. Em que situação haveria truncamento?
+
+**Exercício 1.4:**  Para se familiarizar com o R e com o banco de dados do IPEC (ipec.csv, veja o Apêndice, seção AIDS ? clássico) que ser? utilizado nos próximos capítulos, inicie a an?lise de sobrevivência observando os dados dos pacientes:
+
+a. No formato clássico;
+
+b. No formato de processo de contagem;
+
+c. Observe a saída nos dois formatos. Quais os tempos e status do 1o e 79o pacientes em cada um dos formatos?
+
+d. Organize o banco e faça uma análise exploratória das variáveis de interesse:
+
+    * Verifique as dimensções dos dados;
+    
+    * Veja quais são as variáveis que constam no arquivo de dados;
+    
+    * Substitua as informações ignoradas codificadas com 9/99 ou I por NA (padrão do R)
+
+    * Indique ao R quais s?o as variáveis que estão erroneamente classificadas como    numéricas pelo R (isso acontece quando números são usados para codificar as categorias).
+    
+    * Faça uma análise exploratória e descritiva das variáveis mais relevantes, usando medidas de sumarização, gráficos e diagramas.
+
