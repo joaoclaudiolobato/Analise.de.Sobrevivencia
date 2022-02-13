@@ -67,7 +67,7 @@ A aula de hoje ir? revisar as principais funções na ASC e outras quantidades b
 
 (a) O primeiro indivíduo entrou no estudo com 25 anos j? apresentando o sintoma.
 
-<span style="color: red;">Resposta: Censura à esquerda</span>
+<span style="color: red;">Resposta: Truncamento à esquerda</span>
 
 (b) Outros dois indivíduos entraram no estudo com 20 e 28 anos e não apresentaram o sintoma até o encerramento do estudo.
 
@@ -79,7 +79,7 @@ A aula de hoje ir? revisar as principais funções na ASC e outras quantidades b
 
 (d) O último indivíduo selecionado entrou no estudo com 36 anos e mudou da cidade depois de 4 anos sem ter apresentado o sintoma.
 
-<span style="color: red;">Resposta: Truncamento</span>
+<span style="color: red;">Resposta: Informações Incompletas </span>
 
 2. Mostre que $H(t) = \int_o ^t λ(u)du = - log S(t)$. 
 
