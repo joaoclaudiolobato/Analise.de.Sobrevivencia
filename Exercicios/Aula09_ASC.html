@@ -167,6 +167,34 @@
 <pre><code>    ....
     </code></pre>
 <p><span class="math inline">\(\hat{S}_{km}(36.71)=?\)</span></p>
+<pre class="r"><code>require(survival)</code></pre>
+<pre><code>## Loading required package: survival</code></pre>
+<pre class="r"><code>tempos=c(0.19,0.78,0.96,1.31,2.78,3.16,4.67,4.85,6.50,7.35,8.27,12.07,32.52,33.91,36.71)
+cens=c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
+
+Surv(tempos,cens)</code></pre>
+<pre><code>##  [1]  0.19  0.78  0.96  1.31  2.78  3.16  4.67  4.85  6.50  7.35  8.27 12.07
+## [13] 32.52 33.91 36.71</code></pre>
+<pre class="r"><code>KM=survfit(Surv(tempos,cens)~1)
+summary(KM)</code></pre>
+<pre><code>## Call: survfit(formula = Surv(tempos, cens) ~ 1)
+## 
+##   time n.risk n.event survival std.err lower 95% CI upper 95% CI
+##   0.19     15       1   0.9333  0.0644       0.8153        1.000
+##   0.78     14       1   0.8667  0.0878       0.7106        1.000
+##   0.96     13       1   0.8000  0.1033       0.6212        1.000
+##   1.31     12       1   0.7333  0.1142       0.5405        0.995
+##   2.78     11       1   0.6667  0.1217       0.4661        0.953
+##   3.16     10       1   0.6000  0.1265       0.3969        0.907
+##   4.67      9       1   0.5333  0.1288       0.3322        0.856
+##   4.85      8       1   0.4667  0.1288       0.2717        0.802
+##   6.50      7       1   0.4000  0.1265       0.2152        0.743
+##   7.35      6       1   0.3333  0.1217       0.1630        0.682
+##   8.27      5       1   0.2667  0.1142       0.1152        0.617
+##  12.07      4       1   0.2000  0.1033       0.0727        0.550
+##  32.52      3       1   0.1333  0.0878       0.0367        0.484
+##  33.91      2       1   0.0667  0.0644       0.0100        0.443
+##  36.71      1       1   0.0000     NaN           NA           NA</code></pre>
 <pre><code>    (b) uma estimativa (pontual e intervalar) para a fração de defeituosos esperada nos dois primeiros minutos de funcionamento;
     </code></pre>
 <p><span class="math inline">\(1-\hat{S}_{km}(2.0)=\)</span></p>
@@ -175,12 +203,11 @@
     (d) o tempo necessário para 20% dos isolantes estarem fora de operação.</code></pre>
 <pre class="r"><code>tempos&lt;-c(0.19 ,  0.78,   0.96,   1.31,   2.78,   3.16,   4.67,   4.85,   6.50,   7.35,    8.27,     12.07 ,  32.52,   33.91,   36.71,36.71,36.71,36.71,36.71,36.71,36.71,36.17,36.71,36.71,36.71)</code></pre>
 <pre class="r"><code>cens&lt;-c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0)</code></pre>
-<pre class="r"><code>require(survival)
-Surv(tempos,cens)</code></pre>
+<pre class="r"><code>Surv(tempos,cens)</code></pre>
 <pre><code>##  [1]  0.19   0.78   0.96   1.31   2.78   3.16   4.67   4.85   6.50   7.35 
 ## [11]  8.27  12.07  32.52  33.91  36.71  36.71+ 36.71+ 36.71+ 36.71+ 36.71+
 ## [21] 36.71+ 36.17+ 36.71+ 36.71+ 36.71+</code></pre>
-<pre class="r"><code># Estimativas da Sobreviv?ncia por KM dos isolantes el?tricos
+<pre class="r"><code># Estimativas da Sobreviv?ncia por KM dos isolantes elétricos
 KMi&lt;-survfit(Surv(tempos,cens)~1)</code></pre>
 <pre class="r"><code>summary(KMi)</code></pre>
 <pre><code>## Call: survfit(formula = Surv(tempos, cens) ~ 1)
