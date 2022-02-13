@@ -21,77 +21,131 @@ Os dados mostrados abaixo representam o tempo até a ruptura de um tipo de isola
 
 A partir destes dados amostrais, deseja-se obter as seguintes informações:
 
-        (a)  estimativas  para a Sobrevivência por KM e NA;
+## Letra A
+
+(a)  estimativas  para a Sobrevivência por KM e NA;
         
 $\hat{S}_{km}(0.19)=?$
         
 $\hat{S}_{km}(0.78)=?$
         
-        ....
+....
         
 $\hat{S}_{km}(36.71)=?$
 
+<span style= "color:red">Resposta:
 
 
-```{r}
+```{r message=FALSE, warning=FALSE, include=FALSE}
 require(survival)
-tempos=c(0.19,0.78,0.96,1.31,2.78,3.16,4.67,4.85,6.50,7.35,8.27,12.07,32.52,33.91,36.71)
-cens=c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
-
-Surv(tempos,cens)
+tempos=c(0.19,0.78,0.96,1.31,2.78,3.16,4.67,4.85,6.50,7.35,8.27,12.07,32.52,33.91,36.71,36.71,36.71,36.71,36.71,36.71,36.71,36.17,36.71,36.71,36.71)
+cens=c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0)
 KM=survfit(Surv(tempos,cens)~1)
-summary(KM)
-
+require(ggfortify)
+km.table=fortify(KM)
 ```
 
 
-        (b) uma estimativa (pontual e intervalar) para a fração de defeituosos esperada nos dois primeiros minutos de funcionamento;
+```{r include=FALSE}
+na=survfit(coxph(Surv(tempos,cens)~1))
+na.table=fortify(na)
+```
+
+<center>Estimativas Kaplan-Meier - Km vs Nelson Aalen - NA</center>
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(knitr)
+kable(list(round(km.table,2),round(na.table,2)),align='c')
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+par(mfrow=c(1,2),bg="#1D2225")
+plot(KM,conf.int=F, col="red", lwd=2, main="Estimação de Kaplan-Meier ", xlab="Tempo",ylab="S(t)",col.lab = "white",col.axis = "white",col.main = "white")
+plot(na, col="green", conf.int=F, main="Estimação de Nelson Aalen",lwd=2, xlab="Tempo",ylab="S(t)",col.lab = "white",col.axis = "white",col.main = "white")
+```
+
+
+<br>
+
+<br>
+
+## Letra B
+
+(b) uma estimativa (pontual e intervalar) para a fração de defeituosos esperada nos dois primeiros minutos de funcionamento;
         
-$1-\hat{S}_{km}(2.0)=$
+<span style= "color:red">Resposta:
+        
+#### Estimativa Pontual
 
-        (c) uma estimativa (pontual) para o tempo médio de vida destes  isoladores funcionando a 35 Kvolts (limitado em 40 minutos);uma estimativa para o tempo mediano de vida deste tipo de isolante el?trico funcionando a 35 Kvolts;
+$$1-\hat{S}_{km}(2.0)=\frac{2,78-1,31}{0,80-0,84}=\frac{1,47}{-0,04}=\frac{1,47}{\hat{S}_{km}(2.0)-0,84}$$
+$$1-\hat{S}_{km}(2.0)=\frac{1,47*0,84+0,04}{1,47}$$
+$$1-\hat{S}_{km}(2.0)=1-0,8672109=0,1327891$$
 
-        (d) o tempo necessário para 20% dos isolantes estarem fora de operação.
+#### Estimativa Intervalar
 
+
+ Errado será dkkdkd?
 ```{r}
-tempos<-c(0.19 ,  0.78,   0.96,   1.31,   2.78,   3.16,   4.67,   4.85,   6.50,   7.35,    8.27,     12.07 ,  32.52,   33.91,   36.71,36.71,36.71,36.71,36.71,36.71,36.71,36.17,36.71,36.71,36.71)
+varst=((0.1327891^2) * (1/(21*20)))
+sqrtvarst=sqrt((0.1327891^2) * (1/(21*20)))
+
+0.1327891-(1.96*sqrt(varst))
+0.1327891+(1.96*sqrt(varst))
+
 ```
 
-```{r}
-cens<-c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0)
-```
 
-```{r message=FALSE, warning=FALSE}
-Surv(tempos,cens)
-```
+<br>
 
-```{r}
-# Estimativas da Sobreviv?ncia por KM dos isolantes elétricos
-KMi<-survfit(Surv(tempos,cens)~1)
-```
+<br>
 
-```{r}
-summary(KMi)
-```
+## Letra C
+
+(c) uma estimativa (pontual) para o tempo médio de vida destes  isoladores funcionando a 35 Kvolts (limitado em 40 minutos);uma estimativa para o tempo mediano de vida deste tipo de isolante elétrico funcionando a 35 Kvolts;
+
+<span style= "color:red">Resposta:
+
+#### Tempo mediano
+
 
 ```{r}
-plot(KMi, conf.int=F, col="darkblue",lwd=2,main="Estimativas da Sobreviv?ncia por KM dos isolantes el?tricos", xlab="Minutos")
+KM
 ```
+        * Tempo mediano de vida dos isolantes elétricos = 32,5 minutos
+
+
+#### Tempo médio
 
 ```{r}
+KMi=KM
 #  Códigos no R para o cálculo do Tempo médio
 t=tempos[cens==1]
-tj<-c(0,as.numeric(levels(as.factor(t))))
-surv<-c(1,as.numeric(levels(as.factor(KMi$surv))))
-surv<-sort(surv, decreasing=T)
-k<-length(tj)-1
-prod<-matrix(0,k,1)
+tj=c(0,as.numeric(levels(as.factor(t))))
+surv=c(1,as.numeric(levels(as.factor(KMi$surv))))
+surv=sort(surv, decreasing=T)
+k=length(tj)-1
+prod=matrix(0,k,1)
    for(j in 1:k){
         prod[j]<-(tj[j+1]-tj[j])*surv[j]
 }
-tm<-sum(prod) 
+tm=sum(prod) 
 tm
 ```
 
         * Tempo médio de vida dos isolantes elétricos = 20,9252 minutos
+
+
+<br>
+
+<br>
+
+## Letra D
+
+(d) o tempo necessário para 20% dos isolantes estarem fora de operação.
+
+<span style= "color:red">Resposta:
+
+
+Como podemos ver através das Estimativas de Kaplan Meier, para 20% de falha, o que também corresponde a sobrevivência de 80%, o tempo é de 2,78.
 
